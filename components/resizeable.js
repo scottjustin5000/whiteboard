@@ -1,232 +1,227 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import styled from 'styled-components'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpand, faArrowsAlt, faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
-export default class ResizeDiv extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      minimum_size: 20,
-      original_width: 0,
-      original_height: 0,
-      original_x: 0,
-      original_y: 0,
-      original_mouse_x: 0,
-      original_mouse_y: 0
+const Circle = styled.div`
+  border: 1px solid black;
+  border-radius: 50%;
+  width: 100px; 
+  height:100px;
+  resize: both;
+  cursor: grab;
+  overflow: ${props => props.overflow ? props.overflow : 'auto'};
+  position: absolute;
+  top: 100px; 
+  left: 100px;
+`
+const CircleDragger = styled.div`
+width: 100%;
+height:100%;
+border: 1px solid #000;
+border-radius: 50%;
+box-sizing: border-box;
+cursor: grab
+`
+const Resizer = styled.div`
+position: absolute;
+right: 0px;
+bottom: 0px;
+width: 20px;
+height: 20px;
+cursor: nwse-resize;
+`
+
+const Closer = styled.div`
+position: absolute;
+right: 0px;
+top: -5px;
+width: 20px;
+height: 20px;
+cursor: pointer;
+`
+
+const Square = styled.div`
+border: 1px solid black;
+width: 100px; 
+height:100px;
+overflow: ${props => props.overflow ? props.overflow : 'auto'};
+resize: both;
+cursor: grab;
+position: absolute;
+top: 100px; 
+left: 100px;
+`
+const SquareDragger = styled.div`
+width: 100%;
+height:100%;
+border: 1px solid #000;
+box-sizing: border-box;
+cursor: grab
+`
+const SquareCloser = styled.div`
+position: absolute;
+right: 0px;
+top: -18px;
+width: 20px;
+height: 20px;
+cursor: pointer;
+`
+
+const Resizeable = (props) => {
+  const [overflow, setOverflow] = useState('auto')
+
+  // const [shapes, setShapes] = useState([])
+  const element = useRef()
+
+  useEffect(() => {
+    return () => {
+      window.removeEventListener('mousemove', resize)
+      window.removeEventListener('mouseup', stopResize)
     }
-    this.mouseDown =false
-    this.pos1 = 0
-    this.pos2 = 0
-    this.pos3 = 0
-    this.pos4 = 0
-    this.element = React.createRef()
-    this.onMouseDown = this.onMouseDown.bind(this)
-    this.resize = this.resize.bind(this)
-    this.stopResize = this.stopResize.bind(this)
-    this.initResize = this.initResize.bind(this)
-    this.initDrag = this.initDrag.bind(this)
-    this.onMouseMove = this.onMouseMove.bind(this)
-    this.elementDrag = this.elementDrag.bind(this)
-    this.onMouseUp = this.onMouseUp.bind(this)
+  }, [])
+
+  let minimumSize = 20
+  let originalWidth = 0
+  let originalHeight = 0
+  // let originalX = 0
+  // let originalY = 0
+  let originalMouseX = 0
+  let originalMouseY = 0
+
+  let mouseDown = false
+  let pos1 = 0
+  let pos2 = 0
+  let pos3 = 0
+  let pos4 = 0
+
+  const initResize = (e) => {
+    /* global getComputedStyle:true */
+    /* eslint no-undef: "error" */
+    originalWidth = parseFloat(getComputedStyle(element.current, null).getPropertyValue('width').replace('px', ''))
+    originalHeight = parseFloat(getComputedStyle(element.current, null).getPropertyValue('height').replace('px', ''))
+    // originalX = element.current.getBoundingClientRect().left
+    // originalY = element.current.getBoundingClientRect().top
+    originalMouseX = e.pageX
+    originalMouseY = e.pageY
+
+    window.addEventListener('mousemove', resize)
+    window.addEventListener('mouseup', stopResize)
   }
 
-  initResize (e) {
-   let original_width = parseFloat(getComputedStyle(this.element.current, null).getPropertyValue('width').replace('px', ''))
-    let original_height = parseFloat(getComputedStyle(this.element.current, null).getPropertyValue('height').replace('px', ''))
-    let original_x = this.element.current.getBoundingClientRect().left
-    let original_y = this.element.current.getBoundingClientRect().top
-    let original_mouse_x = e.pageX
-    let original_mouse_y = e.pageY
-    this.setState({
-      original_width,
-      original_height,
-      original_x,
-      original_y,
-      original_mouse_x,
-      original_mouse_y
-    })
-    window.addEventListener('mousemove', this.resize)
-   window.addEventListener('mouseup', this.stopResize)
-  // document.onmouseup = this.stopResize
-  }
-//context menu
-// https://www.sitepoint.com/building-custom-right-click-context-menu-javascript/
- onMouseDown (e) {
-  e.preventDefault()
-  e.stopPropagation()
+  const onMouseDown = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
     const c = e.target.classList
-    this.mouseDown = true
-    if (c.contains('FUBU')) {
-    return this.initResize(e)
-    } else if (c.contains('BOO')) {
-      return this.initDrag(e)
+    mouseDown = true
+    if (c.contains('resizer')) {
+      return initResize(e)
+    } else if (c.contains('dragger')) {
+      return initDrag(e)
     }
   }
 
-  onMouseMove (e) {
-    //temp comment out
-    // if (!e.target.classList.contains('BOO')) return
+  const onMouseMove = (e) => {
     const c = e.target.classList
-     if(this.mouseDown && c.contains('BOO')){
-      this.elementDrag(e)
-     }
-    // console.log(this.mouseDown, 'word?')
-    
-  }
-
-  // componentDidMount() {
-  //   // window.addEventListener('mousemove', this.resize)
-  //   // window.addEventListener('mouseup', this.stopResize)
-  // }
-
-  componentWillUnmount () {
-    window.removeEventListener('mousemove', this.resize)
-    window.removeEventListener('mouseup', this.stopResize)
-  }
-
-  resize (e) {
-
-  //  if(1===1) return
-    if (!e.target.classList.contains('FUBU')) return
-    // if (currentResizer.classList.contains('bottom-right')) {
-    //   const width = original_width + (e.pageX - original_mouse_x);
-    //   const height = original_height + (e.pageY - original_mouse_y)
-    //   if (width > minimum_size) {
-    //     element.style.width = width + 'px'
-    //   }
-    //   if (height > minimum_size) {
-    //     element.style.height = height + 'px'
-    //   }
-    // }
-    // else if (currentResizer.classList.contains('bottom-left')) {
-    //   const height = original_height + (e.pageY - original_mouse_y)
-    //   const width = original_width - (e.pageX - original_mouse_x)
-    //   if (height > minimum_size) {
-    //     element.style.height = height + 'px'
-    //   }
-    //   if (width > minimum_size) {
-    //     element.style.width = width + 'px'
-    //     element.style.left = original_x + (e.pageX - original_mouse_x) + 'px'
-    //   }
-    // }
-    // else if (currentResizer.classList.contains('top-right')) {
-    //   const width = original_width + (e.pageX - original_mouse_x)
-    //   const height = original_height - (e.pageY - original_mouse_y)
-    //   if (width > minimum_size) {
-    //     element.style.width = width + 'px'
-    //   }
-    //   if (height > minimum_size) {
-    //     element.style.height = height + 'px'
-    //     element.style.top = original_y + (e.pageY - original_mouse_y) + 'px'
-    //   }
-    // }
-    // else {
-
-    const width = this.state.original_width + (e.pageX - this.state.original_mouse_x)
-    const height = this.state.original_height + (e.pageY - this.state.original_mouse_y)
-    // if (width > this.state.minimum_size) {
-    //   this.element.current.style.width = width + 'px'
-    //   this.element.current.style.left = this.state.original_x + (e.pageX - this.state.original_mouse_x) + 'px'
-    // }
-    // if (height > this.state.minimum_size) {
-    //   this.element.current.style.height = height + 'px'
-    //   this.element.current.style.top = this.state.original_y + (e.pageY - this.state.original_mouse_y) + 'px'
-    // }
-
-    // const width = original_width + (e.pageX - original_mouse_x);
-    // const height = original_height + (e.pageY - original_mouse_y)
-    if (width > this.state.minimum_size) {
-      this.element.current.style.width = width + 'px'
+    if (mouseDown && c.contains('dragger')) {
+      elementDrag(e)
     }
-    if (height > this.state.minimum_size) {
-      this.element.current.style.height = height + 'px'
+  }
+
+  const onMouseOver = (e) => {
+    const c = e.target.classList
+    if (c.contains('closer')) {
+      setOverflow('visible')
     }
-    // }
   }
 
-  stopResize () {
-    console.log('calling you know!!!!')
-    this.mouseDown = false
-    window.removeEventListener('mousemove', this.resize)
-  }
-
-  // dragElement(elmnt) {
-
-  //   if (document.getElementById(elmnt.id + "header")) {
-  //     // if present, the header is where you move the DIV from:
-  //     document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-  //   } else {
-  //     // otherwise, move the DIV from anywhere inside the DIV:
-  //     elmnt.onmousedown = dragMouseDown;
-  //   }
-  // }
-
-  initDrag (e) {
-    // e = e || window.event;
-    // e.preventDefault();
-    // get the mouse cursor position at startup:
-    this.pos3 = e.clientX
-    this.pos4 = e.clientY
-    window.addEventListener('mouseup', this.stopResize)
-    // document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    // document.onmousemove = elementDrag;
-  }
-
-  elementDrag (e) {
-    if (!e.target.classList.contains('BOO')) return
-    if(!this.mouseDown) return
-    // e = e || window.event;
-    // e.preventDefault();
-    // calculate the new cursor position:
-    this.pos1 = this.pos3 - e.clientX
-    this.pos2 = this.pos4 - e.clientY
-    this.pos3 = e.clientX
-    this.pos4 = e.clientY
-    // set the element's new position:
-    this.element.current.style.top = (this.element.current.offsetTop - this.pos2) + 'px'
-    this.element.current.style.left = (this.element.current.offsetLeft - this.pos1) + 'px'
-  }
-
-  closeDragElement () {
-    // stop moving when mouse button is released:
-    document.onmouseup = null
-    document.onmousemove = null
-  }
-
-  onMouseUp () {
-    console.log('mup')
-   this.mouseDown = false
-  }
-//borderRadius: '50%', circle
-//, position: 'absolute', top: '100px', left: '100px'
-//
-  render () {
-//     if(1===1) {
-//       return (
-
-//   <div style={{border: '1px solid black',  borderRadius: '50%',  width: '100px', height: '100px', overflow:'auto', resize:'both', cursor: 'grab', position: 'absolute', top: '100px', left: '100px'}}  className='BOO' onMouseUp={this.onMouseUp} onMouseDown={this.onMouseDown} onMouseMove={this.onMouseMove}  ref={this.element}>
-//    <div >Resize me!</div> 
-//     <div className='FUBU' style={{ border: '1px solid red', position: 'absolute', right: '0px', bottom: '0px', width: '20px', height: '20px', cursor: 'nwse-resize'}} />
-// </div>
-//       )
-//     }
-    if(this.props.shape === 'circle') {
-      return (
-        <div style={{ border: '1px solid black', borderRadius: '50%', width: '100px', height: '100px', overflow:'auto', resize:'both', cursor: 'grab', position: 'absolute', top: '100px', left: '100px'}} ref={this.element} onMouseDown={this.onMouseDown} onMouseMove={this.onMouseMove} onMouseUp={this.onMouseUp} >
-        <div className='BOO' style={{width: '100%', height: '100%', border: '1px solid #000', borderRadius: '50%', boxSizing: 'border-box', cursor: 'grab'}}>
-          <div className='FUBU' style={{ border: '1px solid black', position: 'absolute', right: '0px', bottom: '0px', width: '10px', height: '10px', cursor: 'nwse-resize'}}>
-          </div>
-        </div>
-      </div>
-      )
+  const onMouseLeave = (e) => {
+    const c = e.target.classList
+    if (c.contains('closer')) {
+      setOverflow('auto')
     }
+  }
+
+  const resize = (e) => {
+    if (!e.target.classList.contains('resizer')) return
+
+    const width = originalWidth + (e.pageX - originalMouseX)
+    const height = originalHeight + (e.pageY - originalMouseY)
+
+    if (width > minimumSize) {
+      element.current.style.width = width + 'px'
+    }
+    if (height > minimumSize) {
+      element.current.style.height = height + 'px'
+    }
+  }
+
+  const stopResize = () => {
+    mouseDown = false
+    window.removeEventListener('mousemove', resize)
+  }
+
+  const initDrag = (e) => {
+    pos3 = e.clientX
+    pos4 = e.clientY
+    window.addEventListener('mouseup', stopResize)
+  }
+
+  const elementDrag = (e) => {
+    if (!e.target.classList.contains('dragger')) return
+    if (!mouseDown) return
+
+    pos1 = pos3 - e.clientX
+    pos2 = pos4 - e.clientY
+    pos3 = e.clientX
+    pos4 = e.clientY
+
+    element.current.style.top = (element.current.offsetTop - pos2) + 'px'
+    element.current.style.left = (element.current.offsetLeft - pos1) + 'px'
+  }
+
+  const onMouseUp = () => {
+    mouseDown = false
+  }
+
+  if (props.shape === 'circle') {
     return (
-      <div style={{ border: '1px solid black', width: '100px', height: '100px', overflow:'auto', resize:'both', cursor: 'grab', position: 'absolute', top: '100px', left: '100px'}} ref={this.element} onMouseDown={this.onMouseDown} onMouseMove={this.onMouseMove} onMouseUp={this.onMouseUp} >
-        <div className='BOO' style={{width: '100%', height: '100%', border: '1px solid #000', boxSizing: 'border-box', cursor: 'grab'}}>
-          <div className='FUBU' style={{ position: 'absolute', right: '0px', bottom: '0px', width: '20px', height: '20px', cursor: 'nwse-resize'}} />
-        </div>
-      </div>
+
+      <Circle
+        ref={element}
+        overflow={overflow}
+        onMouseOver={onMouseOver}
+        onMouseLeave={onMouseLeave}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}>
+        <Closer className='closer'>
+          <FontAwesomeIcon icon={faTimesCircle} onClick={() => { props.onDelete(props.index) }} />
+        </Closer>
+        <CircleDragger className='dragger'>
+          <Resizer className='resizer' />
+        </CircleDragger>
+      </Circle>
     )
   }
+  return (
+    <Square
+      ref={element}
+      overflow={overflow}
+      onMouseOver={onMouseOver}
+      onMouseLeave={onMouseLeave}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}>
+      <SquareCloser className='closer'>
+        <FontAwesomeIcon icon={faTimesCircle} onClick={() => { props.onDelete(props.index) }} />
+      </SquareCloser>
+      <SquareDragger className='dragger'>
+        <Resizer className='resizer' />
+      </SquareDragger>
+    </Square>
+  )
 }
+
+export default Resizeable

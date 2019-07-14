@@ -1,24 +1,37 @@
-// import Link from 'next/link'
-import React, { useState } from "react";
+import React, { useState } from 'react'
+import styled from 'styled-components'
 import Whiteboard from '../components/whiteboard'
 import Toolbar from '../components/toolbar'
-const Index = () => {
 
+const IndexWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const InnerWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: column;
+`
+const ToolbarWrapper = styled.div`
+  width: 90%;
+`
+const Index = () => {
   const [selectedTool, setSelectedTool] = useState('Marker')
 
   const [shapes, setShapes] = useState([])
 
-  return (<div>
-    <div style={{display: 'flex', flexDirection: 'column'}}>
-      <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
-        <div style={{width: '90%'}} >
-        <Toolbar onToolChanged={setSelectedTool} onAddShape={(shape)=>setShapes(prev=> prev.concat(shape))} />
-        </div>
-      </div>
-      <Whiteboard selectedTool={selectedTool} shapes={shapes}/>
-    </div>
-  </div>)
-   
-  }
+  return (
+    <IndexWrapper>
+      <InnerWrapper>
+        <ToolbarWrapper>
+          <Toolbar onToolChanged={setSelectedTool} onAddShape={(shape) => setShapes(prev => prev.concat(shape))} />
+        </ToolbarWrapper>
+      </InnerWrapper>
+      <Whiteboard
+        selectedTool={selectedTool}
+        shapes={shapes}
+        onRemoveShape={(index) => setShapes(prev => prev.filter((f, i) => { if (i !== index) return f }))} />
+    </IndexWrapper>)
+}
 
 export default Index

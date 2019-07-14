@@ -1,49 +1,38 @@
-import React, { Component } from 'react';
-//import { library } from '@fortawesome/fontawesome-svg-core'
+import React from 'react'
+import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMarker, faEraser } from '@fortawesome/free-solid-svg-icons'
 import { faSquare, faCircle } from '@fortawesome/free-regular-svg-icons'
 
-const toolbarStyle = {
-  display: 'flex',
-  width: '100%',
-  border: 'solid 1px',
-  backgroundColor: '#F8F8F8',
-  borderRadius: '3px',
-  boxShadow: `2px 2px 2px 2px #efefefef`,
-  padding: '6px 8px'
-}
+const ToolbarComponent = styled.div`
+  border: 1px solid;
+  display: flex;
+  border-radius: 3px;
+  width: 100%; 
+  background-color:#F8F8F8;
+  box-shadow: 2px 2px 2px 2px #efefefef;
+  padding: 6px 8px;
+`
+const ToolbarButton = styled.button`
+  cursor: pointer;
+`
 
-//library.add(faSquare, fal);
-
-class Toolbar extends Component {
-
-constructor (props) {
-    super(props)
-  //this.mouseDown = this.mouseDown.bind(this)
-  this.onAddShape = this.onAddShape.bind(this)
-}
-onAddShape(shape) {
-  this.props.onAddShape({shape})
-}
-  render() {
-    return (
-      <div style={toolbarStyle}>
-         <button style={{cursor: 'pointer'}} onClick={()=> { this.props.onToolChanged('Marker')}}>
-       <FontAwesomeIcon icon={faMarker} />
-       </button>
-        <button style={{cursor: 'pointer'}} onClick={()=> { this.props.onToolChanged('Eraser')}}>
+const Toolbar = (props) => {
+  return (
+    <ToolbarComponent>
+      <ToolbarButton onClick={() => { props.onToolChanged('Marker') }}>
+        <FontAwesomeIcon icon={faMarker} />
+      </ToolbarButton>
+      <ToolbarButton onClick={() => { props.onToolChanged('Eraser') }}>
         <FontAwesomeIcon icon={faEraser} />
-        </button>
-        <button style={{cursor: 'pointer'}} onClick={() => this.onAddShape('rectangle')}>
+      </ToolbarButton>
+      <ToolbarButton onClick={() => props.onAddShape({shape: 'rectangle'})}>
         <FontAwesomeIcon icon={faSquare} />
-        </button>
-        <button style={{cursor: 'pointer'}} onClick={() => this.onAddShape('circle')}>
+      </ToolbarButton>
+      <ToolbarButton onClick={() => props.onAddShape({shape: 'circle'})}>
         <FontAwesomeIcon icon={faCircle} />
-        </button>
-      </div>
-    );
-  }
+      </ToolbarButton>
+    </ToolbarComponent>
+  )
 }
-
 export default Toolbar
