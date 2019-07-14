@@ -1,7 +1,7 @@
 {
   "name": "whiteboard",
   "version": "1.0.0",
-  "description": "",
+  "description": "simple whiteboard app",
   "main": "index.js",
   "scripts": {
     "dev": "next",
