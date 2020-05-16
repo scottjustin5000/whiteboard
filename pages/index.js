@@ -5,7 +5,6 @@ import Toolbar from '../components/toolbar'
 
 const IndexWrapper = styled.div`
   display: flex;
-  flex-direction: column;
 `
 const InnerWrapper = styled.div`
   display: flex;
@@ -13,7 +12,7 @@ const InnerWrapper = styled.div`
   justify-content: column;
 `
 const ToolbarWrapper = styled.div`
-  width: 90%;
+  margin: 20;
 `
 const Index = () => {
   const [selectedTool, setSelectedTool] = useState('Marker')

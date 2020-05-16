@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import ResizableShape from './resizeable'
+import ResizableShape from './resizable'
 
 const Whiteboard = (props) => {
   const [start, setStart] = useState(false)
@@ -40,7 +40,7 @@ const Whiteboard = (props) => {
     setStart(false)
   }
 
-  const mouseDown = async (e) => {
+  const mouseDown =  (e) => {
     const canvasX = e.pageX - canvas.current.offsetLeft
     const canvasY = e.pageY - canvas.current.offsetTop
     if (props.selectedTool === 'Marker') {
@@ -49,7 +49,7 @@ const Whiteboard = (props) => {
     } else {
       ctx.clearRect(canvasX, canvasY, 20, 20)
     }
-    await setIsDown(true)
+    setIsDown(true)
   }
 
   const mouseMove = (e) => {
@@ -64,8 +64,8 @@ const Whiteboard = (props) => {
     }
   }
 
-  const mouseUp = async () => {
-    await setIsDown(false)
+  const mouseUp = () => {
+     setIsDown(false)
     ctx.closePath()
   }
 
@@ -73,7 +73,12 @@ const Whiteboard = (props) => {
   return (
     <div style={{cursor: `url('/static/${cursor}'), auto`}}>
       {props.shapes.map((s, i) => {
-        return <ResizableShape key={`shape_${i}`} index={i} style={{zIndex: 100}} shape={s.shape} onDelete={props.onRemoveShape} />
+        return <ResizableShape 
+        key={`shape_${i}`} 
+        index={i} 
+        style={{zIndex: 100+i}} 
+        shape={s.shape} 
+        onDelete={props.onRemoveShape} />
       })}
       <canvas
         onMouseDown={mouseDown}
