@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ResizableShape from './resizable'
+import ToolTypes from '../core/tool-types'
 
 const Whiteboard = (props) => {
   const [start, setStart] = useState(false)
@@ -41,9 +42,11 @@ const Whiteboard = (props) => {
   }
 
   const mouseDown =  (e) => {
+    if(props.selectedTool !== ToolTypes.MARKER && props.selectedTool !== ToolTypes.ERASER) return
+
     const canvasX = e.pageX - canvas.current.offsetLeft
     const canvasY = e.pageY - canvas.current.offsetTop
-    if (props.selectedTool === 'Marker') {
+    if (props.selectedTool === ToolTypes.MARKER) {
       ctx.beginPath()
       ctx.moveTo(canvasX, canvasY)
     } else {
@@ -55,11 +58,11 @@ const Whiteboard = (props) => {
   const mouseMove = (e) => {
     const canvasX = e.pageX - canvas.current.offsetLeft
     const canvasY = e.pageY - canvas.current.offsetTop
-    if (isDown && props.selectedTool === 'Marker' && ctx) {
+    if (isDown && props.selectedTool === ToolTypes.MARKER  && ctx) {
       ctx.lineTo(canvasX, canvasY)
       ctx.strokeStyle = '#000000'
       ctx.stroke()
-    } else if (isDown && props.selectedTool === 'Eraser' && ctx) {
+    } else if (isDown && props.selectedTool === ToolTypes.ERASER  && ctx) {
       ctx.clearRect(canvasX, canvasY, 40, 40)
     }
   }
@@ -69,7 +72,7 @@ const Whiteboard = (props) => {
     ctx.closePath()
   }
 
-  let cursor = props.selectedTool && props.selectedTool.toLowerCase() === 'eraser' ? `${props.selectedTool.toLowerCase()}.png` : 'default.png'
+  let cursor = props.selectedTool && props.selectedTool === ToolTypes.ERASER ? `${props.selectedTool.toLowerCase()}.png` : 'default.png'
   return (
     <div style={{cursor: `url('/static/${cursor}'), auto`}}>
       {props.shapes.map((s, i) => {

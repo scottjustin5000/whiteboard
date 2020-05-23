@@ -12,7 +12,6 @@ z-index: 600;
 
 const Closer = styled.div`
 position: absolute;
-display: ${props => props.display ? props.display : 'none'}
 right: 0px;
 top: -5px;
 width: 20px;

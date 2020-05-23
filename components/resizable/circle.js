@@ -18,27 +18,20 @@ const CircleBase = styled.div`
   top: 100px; 
   left: 100px;
 `
-const CircleDragger = styled.div`
-width: 100%;
-height:100%;
-border: 1px solid #000;
-border-radius: 50%;
-box-sizing: border-box;
-cursor: grab
-`
 
 const Circle = React.forwardRef((props, ref)=> {
   return (
     <CircleBase
       ref={ref}
       overflow={props.overflow}
-      onMouseDown={props.onMouseDown}>
+      onMouseDown={props.onMouseDown}
+      onMouseOver={props.onMouseOver}
+      onMouseLeave={props.onMouseLeave}
+      >
       <Closer>
         <FontAwesomeIcon icon={faTimesCircle} onClick={() => { props.onDelete(props.index) }} />
       </Closer>
-      {/* <CircleDragger> */}
         <Resizer onMouseDown={props.onMouseDown} />
-      {/* </CircleDragger> */}
     </CircleBase>
   )
 })

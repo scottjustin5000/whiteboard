@@ -15,7 +15,7 @@ const ToolbarWrapper = styled.div`
   margin: 20;
 `
 const Index = () => {
-  const [selectedTool, setSelectedTool] = useState('Marker')
+  const [selectedTool, setSelectedTool] = useState('')
 
   const [shapes, setShapes] = useState([])
 

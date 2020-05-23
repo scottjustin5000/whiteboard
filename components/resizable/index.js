@@ -5,33 +5,34 @@ import Storage from './storage'
 import Cloud from './cloud'
 
 import useDebounce from '../../hooks/use-debounce'
+import ToolTypes from '../../core/tool-types'
 
 const Resizable = (props)=> {
-  const [display, setDisplay] = useState('none')
+  const [overflow, setOverflow] = useState('auto')
   const [svgDims, setSvgDims] = useState({ w:48, h:48 })
-  const isSvg = props.shape === 'db' || props.shape === 'cloud'
+  const isSvg = props.shape === ToolTypes.STORAGE || props.shape === ToolTypes.CLOUD
   const element = useRef()
   let debouncedSvgDims = useDebounce(svgDims, 500)
 
   const getShape = () => {
     switch(props.shape) {
-      case 'circle':
+      case ToolTypes.CIRCLE:
         return Circle
-      case 'rectangle':
+      case ToolTypes.RECTANGLE:
         return Square
-      case 'db':
+      case ToolTypes.STORAGE:
         return Storage
-      case 'cloud':
+      case ToolTypes.CLOUD:
         return Cloud
     }
   }
 
   const onMouseOver = () => {
-    setDisplay('inline')
+    setOverflow('visible')
   }
 
   const onMouseLeave = () => {
-    setDisplay('none')
+    setOverflow('auto')
   }
 
   const move = (e)  =>{
@@ -111,7 +112,7 @@ const Resizable = (props)=> {
       ref = {element}
       width={svgDims.w}
       height={svgDims.h}
-      display={display}
+      overflow={overflow}
       onMouseDown={move}
       onMouseLeave={onMouseLeave}
       onMouseOver={onMouseOver} {...props}/>
