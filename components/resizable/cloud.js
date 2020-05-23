@@ -2,7 +2,7 @@ import  React from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
-import { Resizer, Closer } from './styles'
+import { Resizer } from './styles'
 import CloudSvg from '../icons/cloud'
 
 
@@ -14,6 +14,15 @@ position: absolute;
 overflow: ${props => props.overflow ? props.overflow : 'auto'};
 top: 100px; 
 left: 100px;
+`
+
+const Closer = styled.div`
+position: absolute;
+right: 0px;
+top: -20px;
+width: 20px;
+height: 20px;
+cursor: pointer;
 `
 const Cloud = React.forwardRef((props, ref) => {
   return (
