@@ -6,5 +6,6 @@ export default {
   STORAGE: 'storage',
   CLOUD: 'cloud',
   RECTANGLE: 'rectangle',
-  CIRCLE: 'circle'
+  CIRCLE: 'circle',
+  BOMB: 'bomb'
 }

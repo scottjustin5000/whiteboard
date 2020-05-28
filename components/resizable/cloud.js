@@ -5,8 +5,6 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { Resizer } from './styles'
 import CloudSvg from '../icons/cloud'
 
-
-
 const CloudBase = styled.div`
 resize: both;
 cursor: grab;

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React  from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMarker, faEraser } from '@fortawesome/free-solid-svg-icons'
+import { faMarker, faEraser, faBomb } from '@fortawesome/free-solid-svg-icons'
 import { faSquare, faCircle } from '@fortawesome/free-regular-svg-icons'
 import StorageSvg from './icons/storage'
 import CloudSvg from './icons/cloud'
@@ -9,12 +9,13 @@ import ToolTypes from '../core/tool-types'
 
 const ToolbarComponent = styled.div`
   border: 1px solid #F8F8F8;
+  position: fixed;
   display: flex;
   border-radius: 8px;
   flex-direction: column;
-  width: 100%; 
+  width: 64px; 
   background-color:#F8F8F8;
-  box-shadow: 2px 2px 2px 2px #efefefef;
+  box-shadow: 0 2px 2px #ccc;
   padding: 6px 8px;
 `
 const ToolbarButton = styled.button`
@@ -35,19 +36,9 @@ const ToolbarButton = styled.button`
 
 const Toolbar = (props) => {
 
-  const [selected, setSelected] = useState(ToolTypes.MARKER)
-  
-  useEffect(()=> {
-    props.onToolChanged(selected)
-  },[])
-
-
-  //use effect to set intiial tool selection...
   const onSelect = (item) => {
     const name = item.name 
-    setSelected(name)
     if(item.type) {
-      console.log("n", name)
       props.onAddShape({shape: name})
     } 
     props.onToolChanged(name)
@@ -56,23 +47,26 @@ const Toolbar = (props) => {
 
   return (
     <ToolbarComponent>
-      <ToolbarButton selected={selected === ToolTypes.MARKER} onClick={() => { onSelect( { name: ToolTypes.MARKER } ) }}>
+      <ToolbarButton selected={props.selected === ToolTypes.MARKER} onClick={() => { onSelect( { name: ToolTypes.MARKER } ) }}>
         <FontAwesomeIcon icon={faMarker} />
       </ToolbarButton>
-      <ToolbarButton selected={selected === ToolTypes.ERASER} onClick={() => { onSelect( {name: ToolTypes.ERASER } ) }}>
+      <ToolbarButton selected={props.selected === ToolTypes.ERASER} onClick={() => { onSelect( {name: ToolTypes.ERASER } ) }}>
         <FontAwesomeIcon icon={faEraser} />
       </ToolbarButton>
-      <ToolbarButton selected={selected ===  ToolTypes.RECTANGLE} onClick={() =>{ onSelect({name: ToolTypes.RECTANGLE, type: 'shape' }) }}>
+      <ToolbarButton selected={props.selected ===  ToolTypes.RECTANGLE} onClick={() =>{ onSelect({name: ToolTypes.RECTANGLE, type: 'shape' }) }}>
         <FontAwesomeIcon icon={faSquare} />
       </ToolbarButton>
-      <ToolbarButton selected={selected === ToolTypes.CIRCLE} onClick={() => onSelect({name: ToolTypes.CIRCLE, type: 'shape'})}>
+      <ToolbarButton selected={props.selected === ToolTypes.CIRCLE} onClick={() => onSelect({name: ToolTypes.CIRCLE, type: 'shape'})}>
         <FontAwesomeIcon icon={faCircle} />
       </ToolbarButton>
-      <ToolbarButton selected={selected === ToolTypes.STORAGE} onClick={() => onSelect({ name: ToolTypes.STORAGE, type: 'shape'})}>
+      <ToolbarButton selected={props.selected === ToolTypes.STORAGE} onClick={() => onSelect({ name: ToolTypes.STORAGE, type: 'shape'})}>
         <StorageSvg width={16} height={16} />
       </ToolbarButton>
-      <ToolbarButton selected={selected === ToolTypes.CLOUD} onClick={() => onSelect({name: ToolTypes.CLOUD, type: 'shape'})}>
+      <ToolbarButton selected={props.selected === ToolTypes.CLOUD} onClick={() => onSelect({name: ToolTypes.CLOUD, type: 'shape'})}>
         <CloudSvg width={16} height={16} />
+      </ToolbarButton>
+      <ToolbarButton selected={props.selected === ToolTypes.BOMB} onClick={() => onSelect({ name: ToolTypes.BOMB })}>
+      <FontAwesomeIcon icon={faBomb} />
       </ToolbarButton>
     </ToolbarComponent>
   )
