@@ -10,7 +10,6 @@ const IndexWrapper = styled.div`
 `
 const InnerWrapper = styled.div`
   display: flex;
-  width: 100%;
   justify-content: column;
 `
 const ToolbarWrapper = styled.div`
