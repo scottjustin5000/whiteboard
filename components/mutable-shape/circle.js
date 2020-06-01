@@ -6,27 +6,23 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { Closer } from './styles'
 
-import Mutable from '../mutable'
-
 const CircleBase = styled.div`
   border: 1px solid black;
   border-radius: 50%;
+  position:absolute;
   width: 100%; 
   height:100%;
   resize: both;
-  cursor: grab;
   overflow: ${props => props.overflow ? props.overflow : 'auto'};
 `
 
 const Circle = (props)=> {
   return (
-  <Mutable>
-    <CircleBase>
+    <CircleBase overflow={props.overflow}>
       <Closer>
         <FontAwesomeIcon icon={faTimesCircle} onClick={() => { props.onDelete(props.index) }} />
       </Closer>
     </CircleBase>
-  </Mutable>
   )
 }
 

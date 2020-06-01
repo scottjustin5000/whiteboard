@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef} from 'react'
-import ResizableShape from './resizable'
+import MutableShape from './mutable-shape'
 import ToolTypes from '../core/tool-types'
 
 const debounce = (fn, time) => {
@@ -21,14 +21,14 @@ const Whiteboard = (props) => {
   const [width, setWidth] = useState(1)
   const canvas = useRef()
 
-
-
   useEffect(() => {
       const ctx = canvas.current.getContext('2d')
       setHeight(window.innerHeight)
       setWidth(window.innerWidth)      
       ctx.lineWidth = 3
-      ctx.fillStyle = '#fff'
+    //  ctx.fillStyle = '#fff'
+      ctx.fillStyle = "blue"
+     ctx.fillRect(0, 0, 833, 722)
   }, [])
 
   useEffect(() => {
@@ -82,6 +82,7 @@ const Whiteboard = (props) => {
   }
 
   const mouseDown =  (e) => {
+    console.log('ZIZZZ', props.selectedTool)
     if(props.selectedTool !== ToolTypes.MARKER && props.selectedTool !== ToolTypes.ERASER) return
     const canvasX = e.pageX - canvas.current.offsetLeft
     const canvasY = e.pageY - canvas.current.offsetTop
@@ -96,6 +97,7 @@ const Whiteboard = (props) => {
   }
 
   const mouseMove = (e) => {
+    console.log('YEAH')
     const ctx = canvas.current.getContext('2d')
     const canvasX = e.pageX - canvas.current.offsetLeft
     const canvasY = e.pageY - canvas.current.offsetTop
@@ -114,22 +116,23 @@ const Whiteboard = (props) => {
     ctx.closePath()
   }
 
+  console.log('jhhj',  props.selectedTool )
   let cursor = props.selectedTool && props.selectedTool === ToolTypes.ERASER ? `${props.selectedTool.toLowerCase()}.png` : 'default.png'
-  if(props.selectedTool === ToolTypes.BOMB) {
-    const ctx = canvas.current.getContext('2d')
-     ctx.clearRect(0,0, canvas.current.width, canvas.current.height)
-    }
+  // if(props.selectedTool === ToolTypes.BOMB) {
+  //   const ctx = canvas.current.getContext('2d')
+  //    ctx.clearRect(0,0, canvas.current.width, canvas.current.height)
+  //   }
 
   return (
     <div style={{cursor: `url('/static/${cursor}'), auto`, scroll:'auto'}}>
-      {props.shapes.map((s, i) => {
-        return <ResizableShape 
+      {/* {props.shapes.map((s, i) => {
+        return <MutableShape 
         key={`shape_${i}`} 
         index={i} 
         style={{zIndex: 100+i}} 
         shape={s.shape} 
         onDelete={props.onRemoveShape} />
-      })}
+      })} */}
       <canvas
         onMouseDown={mouseDown}
         onMouseMove={mouseMove}
