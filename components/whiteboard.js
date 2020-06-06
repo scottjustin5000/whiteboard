@@ -2,18 +2,6 @@ import React, { useState, useEffect, useRef} from 'react'
 import MutableShape from './mutable-shape'
 import ToolTypes from '../core/tool-types'
 
-const debounce = (fn, time) => {
-  let timeoutId = false
-  return (...args) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
-    timeoutId = setTimeout(() => {
-      timeoutId = null
-      fn(...args)
-    }, time)
-  }
-}
 const Whiteboard = (props) => {
   const [start, setStart] = useState(false)
   const [isDown, setIsDown] = useState(false)
@@ -47,7 +35,7 @@ const Whiteboard = (props) => {
        setWidth(width + 20)
      }
     }
-   // const debounced = debounce(onScroll,50)
+
     window.addEventListener("scroll", onScroll);
 
     return () => window.removeEventListener("scroll",onScroll) 

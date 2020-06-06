@@ -22,7 +22,6 @@ height: 20px;
 cursor: pointer;
 `
 const Cloud = (props) => {
-  console.log('HI', props)
   return (
     <CloudBase overflow={props.overflow}>
      <CloudSvg color={props.color} width={props.width} height={props.height} />
