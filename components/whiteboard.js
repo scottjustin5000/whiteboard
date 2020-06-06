@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef} from 'react'
-import ResizableShape from './resizable'
+import MutableShape from './mutable-shape'
 import ToolTypes from '../core/tool-types'
 
 const debounce = (fn, time) => {
@@ -21,8 +21,6 @@ const Whiteboard = (props) => {
   const [width, setWidth] = useState(1)
   const canvas = useRef()
 
-
-
   useEffect(() => {
       const ctx = canvas.current.getContext('2d')
       setHeight(window.innerHeight)
@@ -33,7 +31,6 @@ const Whiteboard = (props) => {
 
   useEffect(() => {
     const onScroll = e => {
-
      const windowHeight = 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight
      const body = document.body;
      const html = document.documentElement;
@@ -50,10 +47,10 @@ const Whiteboard = (props) => {
        setWidth(width + 20)
      }
     }
-    const debounced = debounce(onScroll,50)
-    window.addEventListener("scroll", debounced);
+   // const debounced = debounce(onScroll,50)
+    window.addEventListener("scroll", onScroll);
 
-    return () => window.removeEventListener("scroll", debounced) 
+    return () => window.removeEventListener("scroll",onScroll) 
   }, [height, width])
 
   const startDraw = (evt) => {
@@ -70,8 +67,7 @@ const Whiteboard = (props) => {
         evt.touches[0].pageX,
         evt.touches[0].pageY
       )
-
-      ctx.strokeStyle = '#000'
+      ctx.strokeStyle = props.color
       ctx.lineWidth = 3
       ctx.stroke()
     }
@@ -88,7 +84,9 @@ const Whiteboard = (props) => {
     const ctx = canvas.current.getContext('2d')
     if (props.selectedTool === ToolTypes.MARKER) {
       ctx.beginPath()
+      ctx.lineWidth = props.lineWidth
       ctx.moveTo(canvasX, canvasY)
+      ctx.strokeStyle = props.color
     } else {
       ctx.clearRect(canvasX, canvasY, 20, 20)
     }
@@ -100,8 +98,9 @@ const Whiteboard = (props) => {
     const canvasX = e.pageX - canvas.current.offsetLeft
     const canvasY = e.pageY - canvas.current.offsetTop
     if (isDown && props.selectedTool === ToolTypes.MARKER) {
+      ctx.lineWidth = props.lineWidth
       ctx.lineTo(canvasX, canvasY)
-      ctx.strokeStyle = '#000000'
+      ctx.strokeStyle = props.color
       ctx.stroke()
     } else if (isDown && props.selectedTool === ToolTypes.ERASER) {
       ctx.clearRect(canvasX, canvasY, 40, 40)
@@ -118,16 +117,19 @@ const Whiteboard = (props) => {
   if(props.selectedTool === ToolTypes.BOMB) {
     const ctx = canvas.current.getContext('2d')
      ctx.clearRect(0,0, canvas.current.width, canvas.current.height)
+     props.clearShapes()
     }
 
   return (
     <div style={{cursor: `url('/static/${cursor}'), auto`, scroll:'auto'}}>
       {props.shapes.map((s, i) => {
-        return <ResizableShape 
+        return <MutableShape 
         key={`shape_${i}`} 
         index={i} 
         style={{zIndex: 100+i}} 
         shape={s.shape} 
+        lineWidth={s.lineWidth}
+        color={s.color}
         onDelete={props.onRemoveShape} />
       })}
       <canvas

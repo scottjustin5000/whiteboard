@@ -1,22 +1,17 @@
-
 import React from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
-import { Resizer } from './styles'
-
 const SquareBase = styled.div`
-border: 1px solid black;
-width: 100px; 
-height:100px;
+border: ${props=> props.lineWidth}px  solid ${props => props.color || '#000'};
+width: 100%; 
+height:100%;
 resize: both;
-cursor: grab;
-position: absolute;
+position:absolute;
 overflow: ${props => props.overflow ? props.overflow : 'auto'};
-top: 100px; 
-left: 100px;
 `
+
 const SquareCloser = styled.div`
 position: absolute;
 z-index: 101;
@@ -26,22 +21,17 @@ width: 20px;
 height: 20px;
 cursor: pointer;
 `
-const Square = React.forwardRef((props, ref) => {
-
+const Square =(props) => {
   return (
-    <SquareBase
-     ref={ref}
-      overflow={props.overflow}
-      onMouseDown={props.onMouseDown}
-      onMouseOver={props.onMouseOver}
-      onMouseLeave={props.onMouseLeave}
-      >
+    <SquareBase 
+      lineWidth={props.lineWidth}
+      color={props.color} 
+      overflow={props.overflow}>
       <SquareCloser>
         <FontAwesomeIcon icon={faTimesCircle} onClick={() => { props.onDelete(props.index) }} />
       </SquareCloser>
-        <Resizer onMouseDown={props.onMouseDown} />
     </SquareBase>
   )
-})
+}
 
 export default Square
