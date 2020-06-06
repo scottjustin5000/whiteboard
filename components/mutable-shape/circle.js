@@ -7,7 +7,7 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { Closer } from './styles'
 
 const CircleBase = styled.div`
-  border: 1px solid black;
+  border: ${props=> props.lineWidth}px solid ${props => props.color || '#000'};
   border-radius: 50%;
   position:absolute;
   width: 100%; 
@@ -18,7 +18,10 @@ const CircleBase = styled.div`
 
 const Circle = (props)=> {
   return (
-    <CircleBase overflow={props.overflow}>
+    <CircleBase 
+      lineWidth={props.lineWidth}
+      color={props.color} 
+      overflow={props.overflow}>
       <Closer>
         <FontAwesomeIcon icon={faTimesCircle} onClick={() => { props.onDelete(props.index) }} />
       </Closer>

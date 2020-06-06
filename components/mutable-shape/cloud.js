@@ -22,9 +22,10 @@ height: 20px;
 cursor: pointer;
 `
 const Cloud = (props) => {
+  console.log('HI', props)
   return (
     <CloudBase overflow={props.overflow}>
-     <CloudSvg width={props.width} height={props.height} />
+     <CloudSvg color={props.color} width={props.width} height={props.height} />
      <Closer>
         <FontAwesomeIcon icon={faTimesCircle} onClick={() => { props.onDelete(props.index) }} />
       </Closer>

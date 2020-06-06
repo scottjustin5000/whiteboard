@@ -9,6 +9,8 @@ const StorageBase = styled.div`
 resize: both;
 cursor: grab;
 position:absolute;
+width: 100%; 
+height:100%;
 overflow: ${props => props.overflow ? props.overflow : 'auto'};
 `
 const Closer = styled.div`
@@ -26,7 +28,7 @@ const Storage =(props) => {
       <Closer>
         <FontAwesomeIcon icon={faTimesCircle} onClick={() => { props.onDelete(props.index) }} />
       </Closer>
-      <StorageSvg width={props.width} height={props.height} />
+      <StorageSvg color={props.color} width={props.width} height={props.height} />
     </StorageBase>
   )
 }

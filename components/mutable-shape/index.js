@@ -13,9 +13,11 @@ const Resizable = (props)=> {
   const [svgDims, setSvgDims] = useState({ w:64, h:64 })
   let debouncedSvgDims = useDebounce(svgDims, 500)
 
-  const Shape = (shape, onDelete, index) => {
+  const Shape = (shape, onDelete, color, lineWidth, index) => {
     const props = {
+      color,
       index,
+      lineWidth,
       overflow: overflow,
       onDelete: onDelete
     }
@@ -53,11 +55,11 @@ const Resizable = (props)=> {
     })
   }
     return (
-      <Mutable 
+    <Mutable
       onMouseOver={onMouseOver}
       onMouseLeave={onMouseLeave}
       onResize={onResize}>
-      {Shape(props.shape, props.onDelete, props.index)}
+      {Shape(props.shape, props.onDelete, props.color, props.lineWidth, props.index)}
       </Mutable>
   )
 }
