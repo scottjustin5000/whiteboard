@@ -12,20 +12,22 @@ cursor: nwse-resize;
 z-index: 600;
 `
 
-const Base = styled.div`
-width: 100px; 
-height:100px;
-resize: both;
-cursor: grab;
-position: absolute;
-top: 100px; 
-left: 100px;
-`
-const Mutable = (props)=> {
+const Base = styled.div.attrs({
+  style: ({width, height, top, left }) => ({
+    width,
+    height,
+    top,
+    left
+  }),
+})`resize: both;
+   cursor: grab;
+   position: absolute;`
+
+const Mutable =  (props)=> {
+
   const element = useRef()
 
   const onMove = (e)  =>{
-
     let elem = element.current
     const h = elem.offsetHeight
     const w = elem.offsetWidth
@@ -38,18 +40,24 @@ const Mutable = (props)=> {
     
     const follow = (e) => {
 
-      elem.style.top = `${e.pageY + y - h}px`
-      elem.style.left = `${e.pageX + x - w}px`
+      // elem.style.top = `${e.pageY + y - h}px`
+      // elem.style.left = `${e.pageX + x - w}px`
+      props.onMove({
+        index: props.index,
+        top: e.pageY + y - h,
+        left: e.pageX + x - w
+      })
     }
     
     const resize = (e) => {
   
       const w = (e.pageX - l + x)
       const h = (e.pageY - t + y)
-      elem.style.width = `${w}px`
-      elem.style.height = `${h}px`
+      // elem.style.width = `${w}px`
+      // elem.style.height = `${h}px`
       if(props.onResize){
         props.onResize({
+          index: props.index,
           w,
           h
         })
@@ -82,7 +90,12 @@ const Mutable = (props)=> {
   }
  return (
  <Base
+    width={props.width}
+    height={props.height}
+    top={props.top}
+    left={props.left}
     ref={element}
+    onContextMenu={props.onContextMenu}
     onMouseDown={onMove}
     onMouseLeave={props.onMouseLeave}
     onMouseOver={props.onMouseOver}

@@ -2,7 +2,7 @@ import React, { useState, useRef, Fragment }  from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMarker, faEraser, faBomb, faPalette } from '@fortawesome/free-solid-svg-icons'
-import { faSquare, faCircle } from '@fortawesome/free-regular-svg-icons'
+import { faSquare, faCircle, faHandRock } from '@fortawesome/free-regular-svg-icons'
 import StorageSvg from './icons/storage'
 import CloudSvg from './icons/cloud'
 import ToolTypes from '../core/tool-types'
@@ -131,6 +131,9 @@ const Toolbar = (props) => {
       </ToolbarButton>
       <ToolbarButton selected={props.selected === ToolTypes.BOMB} onClick={() => onSelect({ name: ToolTypes.BOMB })}>
       <FontAwesomeIcon icon={faBomb} />
+      </ToolbarButton>
+      <ToolbarButton selected={props.selected === ToolTypes.HAND} onClick={() => onSelect({ name: ToolTypes.HAND })}>
+      <FontAwesomeIcon icon={faHandRock} />
       </ToolbarButton>
     </ToolbarComponent>
     </Fragment>
