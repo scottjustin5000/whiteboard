@@ -1,10 +1,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
-import { Closer } from './styles'
 
 const CircleBase = styled.div`
   border: ${props=> props.lineWidth}px solid ${props => props.color || '#000'};
@@ -22,9 +19,6 @@ const Circle = (props)=> {
       lineWidth={props.lineWidth}
       color={props.color} 
       overflow={props.overflow}>
-      <Closer>
-        <FontAwesomeIcon icon={faTimesCircle} onClick={() => { props.onDelete(props.index) }} />
-      </Closer>
     </CircleBase>
   )
 }
