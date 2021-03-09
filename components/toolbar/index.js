@@ -1,58 +1,23 @@
 import React, { useState, useRef, Fragment }  from 'react'
-import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMarker, faEraser, faBomb, faPalette } from '@fortawesome/free-solid-svg-icons'
 import { faSquare, faCircle, faHandRock } from '@fortawesome/free-regular-svg-icons'
-import StorageSvg from './icons/storage'
-import CloudSvg from './icons/cloud'
-import ToolTypes from '../core/tool-types'
-import Palette from './color-palette'
-import Slider from './slider'
+import StorageSvg from '../icons/storage'
+import CloudSvg from '../icons/cloud'
+import ToolTypes from '../../core/tool-types'
+import Palette from '../color-palette'
+import Slider from '../slider'
+import {
+  ToolbarComponent,
+  ToolbarButton,
+  LineWrapper,
+  LineDisplay
+} from './styles'
 
-import useOnClickOutside from '../hooks/use-on-click-outside'
+import useOnClickOutside from '../../hooks/use-on-click-outside'
 
-const ToolbarComponent = styled.div`
-  border: 1px solid #F0F0F0;
-  position: fixed;
-  display: flex;
-  border-radius: 8px;
-  flex-direction: column;
-  width: 56px; 
-  background-color:#F0F0F0;
-  box-shadow: 0 2px 2px #ccc;
-  padding: 6px 8px;
-`
-const ToolbarButton = styled.button`
-  cursor: pointer;
-  height: 40px;
-  border: none;
-  border-radius: 6px;
-  background-color: ${props=> props.selected ? '#D6D6D6;' : '#f0f0f0;'} 
-  &:hover {
-    background-color: #D6D6D6; 
-  }
-  &:active {
-    outline: none;
-    border: none;
-    }
-  &:focus {outline:0;}
-`
 
-const LineWrapper = styled.div`
- display: flex;
- justify-content: center;
-`
-const LineDisplay = styled.div`
-display: flex;
-width: 22px; 
-justify-content: center; 
-align-items:center;  
-height: 22px;
-border: 3px solid ${props=> props.color};
-text-align: center;
-vertical-align: middle; 
-border-radius: 50%;
-`
 
 const Toolbar = (props) => {
 
@@ -139,4 +104,13 @@ const Toolbar = (props) => {
     </Fragment>
   )
 }
+
+Toolbar.propTypes = {
+  selected: PropTypes.string,
+  lineWidth: PropTypes.number,
+  color: PropTypes.string,
+  onAddShape: PropTypes.func,
+  onWidthChange: PropTypes.func,
+  onToolChanged: PropTypes.func
+ }
 export default Toolbar

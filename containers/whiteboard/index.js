@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import Board from '../../components/whiteboard'
 import Toolbar from '../../components/toolbar'
@@ -17,21 +17,9 @@ const ToolbarWrapper = styled.div`
 `
 const Index = () => {
   const [selectedTool, setSelectedTool] = useState('')
-
-  const [shapes, setShapes] = useState([])
-
+  const canvas = useRef()
   const [color, setColor] = useState('#000')
-
   const [lineWidth, setLineWidth] = useState(2)
-
-  const onClearShapes = () => {
-    setSelectedTool('')
-    setShapes([])
-  }
-
-  const onRemoveShape = (index) => {
-    setShapes(prev => prev.filter((f, i) => { if (i !== index) return f }))
-  }
 
   return (
     <IndexWrapper>
@@ -44,16 +32,15 @@ const Index = () => {
              onWidthChange={(w) => setLineWidth(w)}
              selected={selectedTool} 
              onToolChanged={setSelectedTool} 
-             onAddShape={(shape) => setShapes(prev => prev.concat(shape))} />
+             onAddShape={(shape) => canvas.current.addShape(shape)} />
         </ToolbarWrapper>
       </InnerWrapper>
       <Board
+        ref={canvas} 
         lineWidth={lineWidth}
         color={color}
-        clearShapes={onClearShapes}
         selectedTool={selectedTool}
-        shapes={shapes}
-        onRemoveShape={onRemoveShape} />
+         />
     </IndexWrapper>)
 }
 
