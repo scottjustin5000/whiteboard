@@ -5,5 +5,6 @@ export default {
   CLOUD: 'cloud',
   RECTANGLE: 'rectangle',
   CIRCLE: 'circle',
+  HAND: 'hand',
   BOMB: 'bomb'
 }
